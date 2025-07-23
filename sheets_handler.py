@@ -78,7 +78,9 @@ class SheetsHandler:
                 {
                     "range": f"L{row}",  # Commute Time to Shopify column
                     "values": [
-                        [f" {car_commute} | {bike_commute} | {transit_commute}"]
+                        [
+                            f" Car: {car_commute} | Bike: {bike_commute} | Transit: {transit_commute}"
+                        ]
                     ],
                 },
                 {
