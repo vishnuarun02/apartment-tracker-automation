@@ -127,6 +127,31 @@ def batch_process():
         ), 500
 
 
+@app.route("/test-sheets", methods=["GET"])
+def test_sheets():
+    """Test endpoint to check Google Sheets connection"""
+    try:
+        # Test reading from sheet
+        all_data = sheets_handler.worksheet.get_all_records()
+
+        return jsonify(
+            {
+                "status": "success",
+                "message": "Successfully connected to Google Sheets",
+                "row_count": len(all_data),
+                "columns": list(all_data[0].keys()) if all_data else [],
+            }
+        )
+
+    except Exception as e:
+        return jsonify(
+            {
+                "status": "error",
+                "message": f"Failed to connect to Google Sheets: {str(e)}",
+            }
+        ), 500
+
+
 @app.route("/test-maps", methods=["POST"])
 def test_maps():
     """Test endpoint for Google Maps functionality"""
