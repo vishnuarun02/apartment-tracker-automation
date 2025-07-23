@@ -2,23 +2,31 @@ import gspread
 from google.oauth2.service_account import Credentials
 from config import Config
 import logging
+import json
+import os
 
 
 class SheetsHandler:
     def __init__(self):
-        # Set up Google Sheets authentication
         scope = [
             "https://spreadsheets.google.com/feeds",
             "https://www.googleapis.com/auth/drive",
         ]
 
-        creds = Credentials.from_service_account_file(
-            Config.GOOGLE_SHEETS_CREDENTIALS_FILE, scopes=scope
-        )
+        # Check if running on Railway (production) or locally
+        if os.getenv("GOOGLE_CREDENTIALS"):
+            # Production: use environment variable
+            creds_dict = json.loads(os.getenv("GOOGLE_CREDENTIALS"))
+            creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
+        else:
+            # Local: use credentials file
+            creds = Credentials.from_service_account_file(
+                Config.GOOGLE_SHEETS_CREDENTIALS_FILE, scopes=scope
+            )
 
         self.client = gspread.authorize(creds)
         self.spreadsheet = self.client.open_by_key(Config.SPREADSHEET_ID)
-        self.worksheet = self.spreadsheet.sheet1  # Assuming first sheet
+        self.worksheet = self.spreadsheet.sheet1
 
     def find_row_by_address(self, address):
         """Find the row number that contains the given address"""
@@ -70,7 +78,7 @@ class SheetsHandler:
                 {
                     "range": f"L{row}",  # Commute Time to Shopify column
                     "values": [
-                        [f"🚗 {car_commute} | 🚴 {bike_commute} | 🚌 {transit_commute}"]
+                        [f" {car_commute} | {bike_commute} | {transit_commute}"]
                     ],
                 },
                 {
