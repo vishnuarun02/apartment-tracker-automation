@@ -6,7 +6,7 @@ A Python based automation system designed to eliminate manual data entry in apar
 
 Takes raw apartment addresses and automatically enriches them with:
 - Property names from Google Places
-- Accurate commute times (car, bike, transit)
+- Accurate commute times to your desired location (car, bike, transit)
 - Direct Google Maps links
 - City extraction and standardization
 
